@@ -1,6 +1,6 @@
 package com.agenda.vue;
 
-import com.agenda.controler.EventController;
+import com.agenda.controler.AgendaController;
 import com.agenda.model.Notification;
 
 import javax.swing.*;
@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class NotificationsPanel extends JPanel {
-    private EventController eventController;
+    private AgendaController controller;
     private NotificationTableModel tableModel;
     private JTable notificationTable;
     private JButton markAllReadButton;
@@ -22,8 +22,8 @@ public class NotificationsPanel extends JPanel {
     private final Color UNREAD_COLOR = new Color(255, 250, 200);
     private final Color READ_COLOR = Color.WHITE;
     
-    public NotificationsPanel(EventController eventController) {
-        this.eventController = eventController;
+    public NotificationsPanel(AgendaController controller) {
+        this.controller = controller;
         setLayout(new BorderLayout());
         setBackground(BG_COLOR);
         
@@ -145,8 +145,9 @@ public class NotificationsPanel extends JPanel {
     }
     
     private void loadNotifications() {
-        if (eventController != null) {
-            List<Notification> notifications = eventController.getNotificationsForCurrentUser();
+        if (controller != null) {
+            // Use AgendaController to get notifications
+            List<Notification> notifications = controller.getNotificationsForCurrentUser();
             tableModel.setNotifications(notifications);
         } else {
             // Show sample notifications for demo
@@ -176,8 +177,9 @@ public class NotificationsPanel extends JPanel {
             notification.setLu(true);
             tableModel.fireTableRowsUpdated(row, row);
             
-            if (eventController != null) {
-                eventController.markNotificationAsRead(notification.getNotif_id());
+            // Use AgendaController to mark notification as read
+            if (controller != null) {
+                controller.markNotificationAsRead(notification.getNotif_id());
             }
             
             updateButtonStates();
@@ -185,8 +187,9 @@ public class NotificationsPanel extends JPanel {
     }
     
     private void markAllAsRead() {
-        if (eventController != null) {
-            eventController.markAllNotificationsAsRead();
+        // Use AgendaController to mark all notifications as read
+        if (controller != null) {
+            controller.markAllNotificationsAsRead();
         }
         
         for (int i = 0; i < tableModel.getRowCount(); i++) {

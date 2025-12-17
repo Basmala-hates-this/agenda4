@@ -1,6 +1,6 @@
 package com.agenda.vue;
 
-import com.agenda.controler.AuthController;
+import com.agenda.controler.AgendaController;
 import com.agenda.model.User;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ public class LoginDialog extends JDialog {
     private JButton registerButton;
     private boolean authenticated = false;
     private User loggedUser;
-    private AuthController authController;
+    private AgendaController controller;
 
     // Theme colors
     private final Color THEME_COLOR = new Color(70, 130, 180);
@@ -24,7 +24,7 @@ public class LoginDialog extends JDialog {
 
     public LoginDialog(Frame parent) {
         super(parent, "Login - Collaborative Agenda", true);
-        this.authController = new AuthController();
+        this.controller = new AgendaController();
 
         setSize(450, 350);
         setLocationRelativeTo(parent);
@@ -148,7 +148,8 @@ public class LoginDialog extends JDialog {
             return;
         }
 
-        loggedUser = authController.authenticate(email, password);
+        // Use AgendaController for authentication
+        loggedUser = controller.authenticate(email, password);
         if (loggedUser != null) {
             authenticated = true;
             dispose();
@@ -166,6 +167,11 @@ public class LoginDialog extends JDialog {
         }
     }
 
-    public boolean isAuthenticated() { return authenticated; }
-    public User getLoggedUser() { return loggedUser; }
+    public boolean isAuthenticated() { 
+        return authenticated; 
+    }
+    
+    public User getLoggedUser() { 
+        return loggedUser; 
+    }
 }

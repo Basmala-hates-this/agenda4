@@ -107,18 +107,55 @@ public class WelcomePage extends JFrame {
     }
 
     private void openLoginDialog() {
-        LoginDialog loginDialog = new LoginDialog(null); // temporary null parent
+        LoginDialog loginDialog = new LoginDialog(this);
         loginDialog.setVisible(true);
 
         if (loginDialog.isAuthenticated()) {
             dispose(); // close welcome page
-            // Open main agenda here
+            // Open main agenda with AgendaController
+            com.agenda.controler.AgendaController controller = new com.agenda.controler.AgendaController();
+            
+            // Check if logged user is admin to show appropriate main interface
+            if (loginDialog.getLoggedUser() != null && "admin".equalsIgnoreCase(loginDialog.getLoggedUser().getRole())) {
+                // Option 1: Open MainFrame with admin privileges
+                MainFrame frame = new MainFrame(controller);
+                frame.setVisible(true);
+                
+                // Option 2: Or open AdminProfileApp directly
+                // AdminProfileApp adminApp = new AdminProfileApp();
+                // adminApp.setVisible(true);
+            } else {
+                // Open regular MainFrame for normal users
+                MainFrame frame = new MainFrame(controller);
+                frame.setVisible(true);
+            }
         }
     }
 
     private void openRegisterDialog() {
-        RegisterDialog registerDialog = new RegisterDialog(null); // temporary null parent
+        RegisterDialog registerDialog = new RegisterDialog(this);
         registerDialog.setVisible(true);
+        
+        // Optionally auto-login after successful registration
+        if (registerDialog.isRegistered()) {
+            // Show success message
+            JOptionPane.showMessageDialog(this,
+                "Registration successful! You can now login with your credentials.",
+                "Registration Complete",
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            // Auto-open login dialog with pre-filled email
+            LoginDialog loginDialog = new LoginDialog(this);
+            loginDialog.setVisible(true);
+            
+            if (loginDialog.isAuthenticated()) {
+                dispose(); // close welcome page
+                // Open main agenda
+                com.agenda.controler.AgendaController controller = new com.agenda.controler.AgendaController();
+                MainFrame frame = new MainFrame(controller);
+                frame.setVisible(true);
+            }
+        }
     }
 
     public static void main(String[] args) {

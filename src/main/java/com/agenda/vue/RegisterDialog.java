@@ -1,6 +1,6 @@
 package com.agenda.vue;
 
-import com.agenda.controler.AuthController;
+import com.agenda.controler.AgendaController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -21,7 +21,7 @@ public class RegisterDialog extends JDialog {
 
     private boolean registered = false;
     private String registeredEmail;
-    private AuthController authController;
+    private AgendaController controller;
 
     // Theme colors
     private final Color THEME_COLOR = new Color(70, 130, 180);
@@ -31,7 +31,7 @@ public class RegisterDialog extends JDialog {
 
     public RegisterDialog(Frame parent) {
         super(parent, "Sign Up - Collaborative Agenda", true);
-        this.authController = new AuthController();
+        this.controller = new AgendaController();
 
         setSize(500, 600);
         setLocationRelativeTo(parent);
@@ -192,17 +192,19 @@ public class RegisterDialog extends JDialog {
             return;
         }
 
-        if (password.length() < 4) {
-            JOptionPane.showMessageDialog(this, "Password must be at least 4 characters", "Error", JOptionPane.ERROR_MESSAGE);
+        if (password.length() < 8) {
+            JOptionPane.showMessageDialog(this, "Password must be at least 8 characters", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        if (authController.emailExists(email)) {
+        // Use AgendaController to check if email exists
+        if (controller.emailExists(email)) {
             JOptionPane.showMessageDialog(this, "This email is already in use", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-       boolean success = authController.register(firstName, lastName, email, phone, role, password);
+        // Use AgendaController to register user
+        boolean success = controller.register(firstName, lastName, email, phone, role, password);
         if (success) {
             registered = true;
             registeredEmail = email;
@@ -213,6 +215,11 @@ public class RegisterDialog extends JDialog {
         }
     }
 
-    public boolean isRegistered() { return registered; }
-    public String getRegisteredEmail() { return registeredEmail; }
+    public boolean isRegistered() { 
+        return registered; 
+    }
+    
+    public String getRegisteredEmail() { 
+        return registeredEmail; 
+    }
 }

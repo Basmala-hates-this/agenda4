@@ -25,6 +25,7 @@ public class MainFrame extends JFrame {
     private WeeklyPanel weeklyPanel;
     private EventListPanel listPanel;
     private Calender calPanel;
+    private NotificationsPanel notificationsPanel;
 
     // Layout components
     private JPanel mainContentPanel;
@@ -34,6 +35,7 @@ public class MainFrame extends JFrame {
     private JButton btnList;
     private JButton btnWeekly;
     private JButton btnMonthly;
+    private JButton btnNotifications;
     private JButton currentlySelectedButton;
 
     // Status bar
@@ -90,18 +92,33 @@ public class MainFrame extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         menuBar.setBackground(new Color(240, 245, 255));
 
+        // File menu
         JMenu fileMenu = new JMenu("File");
         fileMenu.setFont(new Font("SansSerif", Font.BOLD, 14));
+
+        JMenuItem profileItem = new JMenuItem("My Profile");
+        profileItem.addActionListener(e -> openUserProfile());
+
+        JMenuItem adminProfileItem = new JMenuItem("Admin Profile");
+        adminProfileItem.addActionListener(e -> openAdminProfile());
 
         JMenuItem helpItem = new JMenuItem("Help");
         helpItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK));
         helpItem.addActionListener(e -> showHelpDialog());
 
+        JMenuItem logoutItem = new JMenuItem("Logout");
+        logoutItem.addActionListener(e -> logout());
+
         JMenuItem closeItem = new JMenuItem("Close");
         closeItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
         closeItem.addActionListener(e -> closeApplication());
 
+        fileMenu.add(profileItem);
+        fileMenu.add(adminProfileItem);
+        fileMenu.addSeparator();
         fileMenu.add(helpItem);
+        fileMenu.addSeparator();
+        fileMenu.add(logoutItem);
         fileMenu.addSeparator();
         fileMenu.add(closeItem);
 
@@ -129,10 +146,12 @@ public class MainFrame extends JFrame {
         btnList = createNavButton("List", "LIST");
         btnWeekly = createNavButton("Weekly", "WEEKLY");
         btnMonthly = createNavButton("Monthly", "MONTHLY");
+        btnNotifications = createNavButton("Notifications", "NOTIFICATIONS");
 
         navPanel.add(btnList);
         navPanel.add(btnWeekly);
         navPanel.add(btnMonthly);
+        navPanel.add(btnNotifications);
 
         headerPanel.add(navPanel);
         headerPanel.add(Box.createVerticalStrut(15));
@@ -148,10 +167,12 @@ public class MainFrame extends JFrame {
         weeklyPanel = new WeeklyPanel(controller, this::refreshAllViews);
         calPanel = new Calender(controller, this::refreshAllViews);
         listPanel = new EventListPanel(controller, this::refreshAllViews);
+        notificationsPanel = new NotificationsPanel(controller);
 
         mainContentPanel.add(listPanel, "LIST");
         mainContentPanel.add(weeklyPanel, "WEEKLY");
         mainContentPanel.add(calPanel, "MONTHLY");
+        mainContentPanel.add(notificationsPanel, "NOTIFICATIONS");
 
         add(mainContentPanel, BorderLayout.CENTER);
 
@@ -160,7 +181,7 @@ public class MainFrame extends JFrame {
         footerPanel.setBackground(FOOTER_COLOR);
         footerPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        statusBar = new JLabel("Ready");
+        statusBar = new JLabel("Ready - Logged in as: " + currentUser.getFirstName());
         statusBar.setFont(new Font("SansSerif", Font.PLAIN, 14));
         footerPanel.add(statusBar, BorderLayout.WEST);
 
@@ -197,6 +218,34 @@ public class MainFrame extends JFrame {
         return button;
     }
 
+    private void openUserProfile() {
+        if ("admin".equalsIgnoreCase(currentUser.getRole())) {
+            openAdminProfile();
+        } else {
+            UserProfileApp profileApp = new UserProfileApp();
+            profileApp.setVisible(true);
+        }
+    }
+
+    private void openAdminProfile() {
+        AdminProfileApp adminProfileApp = new AdminProfileApp();
+        adminProfileApp.setVisible(true);
+    }
+
+    private void logout() {
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to logout?",
+                "Confirm Logout",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            dispose();
+            // Return to welcome page
+            WelcomePage welcomePage = new WelcomePage();
+            welcomePage.setVisible(true);
+        }
+    }
+
     private void showHelpDialog() {
         String helpText = "<html><div style='font-size:12px; padding:10px;'>" +
                 "<h2>Keyboard Shortcuts</h2>" +
@@ -206,6 +255,7 @@ public class MainFrame extends JFrame {
                 "<tr><td><b>Ctrl + L</b></td><td>List view</td></tr>" +
                 "<tr><td><b>Ctrl + W</b></td><td>Weekly view</td></tr>" +
                 "<tr><td><b>Ctrl + M</b></td><td>Monthly view</td></tr>" +
+                "<tr><td><b>Ctrl + T</b></td><td>Notifications</td></tr>" +
                 "<tr><td><b>Delete</b></td><td>Delete event</td></tr>" +
                 "<tr><td><b>Ctrl + H</b></td><td>Show help</td></tr>" +
                 "</table></div></html>";
@@ -270,12 +320,18 @@ public class MainFrame extends JFrame {
             case "LIST" -> buttonToSelect = btnList;
             case "WEEKLY" -> buttonToSelect = btnWeekly;
             case "MONTHLY" -> buttonToSelect = btnMonthly;
+            case "NOTIFICATIONS" -> buttonToSelect = btnNotifications;
         }
 
         if (buttonToSelect != null) updateNavButtons(buttonToSelect);
         cardLayout.show(mainContentPanel, viewName);
 
         if (statusBar != null) setStatus("Switched to " + viewName + " view");
+        
+        // Refresh notifications when switching to that view
+        if ("NOTIFICATIONS".equals(viewName) && notificationsPanel != null) {
+            notificationsPanel.refreshNotifications();
+        }
     }
 
     public void notifyEventCreated() {
@@ -311,6 +367,7 @@ public class MainFrame extends JFrame {
             if (weeklyPanel != null) weeklyPanel.refreshView();
             if (calPanel != null) calPanel.refreshView();
             if (listPanel != null) listPanel.refreshList();
+            if (notificationsPanel != null) notificationsPanel.refreshNotifications();
             alertedEvents.removeIf(ev -> !controller.getEvents().contains(ev));
         });
     }
@@ -472,6 +529,7 @@ public class MainFrame extends JFrame {
     private void setupShortcuts() {
         JRootPane root = getRootPane();
 
+        // Ctrl+N: Add new event
         KeyStroke addKey = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK);
         root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(addKey, "addEvent");
         root.getActionMap().put("addEvent", new AbstractAction() {
@@ -481,6 +539,7 @@ public class MainFrame extends JFrame {
             }
         });
 
+        // Delete: Delete selected event
         KeyStroke delKey = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0);
         root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(delKey, "deleteEvent");
         root.getActionMap().put("deleteEvent", new AbstractAction() {
@@ -505,6 +564,7 @@ public class MainFrame extends JFrame {
             }
         });
 
+        // Ctrl+Q: Close application
         KeyStroke closeKey = KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK);
         root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(closeKey, "closeApp");
         root.getActionMap().put("closeApp", new AbstractAction() {
@@ -514,6 +574,7 @@ public class MainFrame extends JFrame {
             }
         });
 
+        // Ctrl+L: List view
         KeyStroke listKey = KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK);
         root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(listKey, "goToList");
         root.getActionMap().put("goToList", new AbstractAction() {
@@ -523,6 +584,7 @@ public class MainFrame extends JFrame {
             }
         });
 
+        // Ctrl+W: Weekly view
         KeyStroke weeklyKey = KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK);
         root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(weeklyKey, "goToWeekly");
         root.getActionMap().put("goToWeekly", new AbstractAction() {
@@ -532,6 +594,7 @@ public class MainFrame extends JFrame {
             }
         });
 
+        // Ctrl+M: Monthly view
         KeyStroke monthlyKey = KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK);
         root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(monthlyKey, "goToMonthly");
         root.getActionMap().put("goToMonthly", new AbstractAction() {
@@ -541,6 +604,17 @@ public class MainFrame extends JFrame {
             }
         });
 
+        // Ctrl+T: Notifications view
+        KeyStroke notificationsKey = KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK);
+        root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(notificationsKey, "goToNotifications");
+        root.getActionMap().put("goToNotifications", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchView("NOTIFICATIONS");
+            }
+        });
+
+        // Ctrl+H: Show help
         KeyStroke helpKey = KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
         root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(helpKey, "showHelp");
         root.getActionMap().put("showHelp", new AbstractAction() {

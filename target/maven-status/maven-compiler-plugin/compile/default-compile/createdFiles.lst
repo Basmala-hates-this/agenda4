@@ -10,7 +10,6 @@ com\agenda\controler\AuthController.class
 com\agenda\vue\MainFrame$6.class
 com\agenda\controler\AuthController$1.class
 com\agenda\vue\MainFrame$3.class
-com\agenda\vue\UserProfilePanel$1.class
 com\agenda\vue\WeeklyGridPanel$2.class
 com\agenda\vue\Calender$1.class
 com\agenda\vue\EventDetailsDialog.class
@@ -27,23 +26,19 @@ com\agenda\vue\MainFrame.class
 com\agenda\controler\EventController.class
 com\agenda\vue\EventListPanel$3.class
 com\agenda\model\User.class
-com\agenda\vue\AdminProfilePanel$1.class
 com\agenda\util\JsonUtil.class
-com\agenda\vue\UserProfileApp.class
 com\agenda\vue\MainFrame$1.class
 com\agenda\vue\WelcomePage$1.class
 com\agenda\vue\EventDialogUnified$Mode.class
 com\agenda\vue\RegisterDialog.class
 com\agenda\vue\WeeklyGridPanel$1.class
 com\agenda\controler\EventController$2.class
-com\agenda\vue\AdminProfilePanel.class
 com\agenda\vue\MainFrame$8.class
 com\agenda\vue\NotificationsPanel.class
 com\agenda\controler\AgendaController.class
 com\agenda\vue\Calender$3.class
 com\agenda\vue\WelcomePage.class
 com\agenda\controler\AgendaController$1.class
-com\agenda\vue\UserProfilePanel.class
 com\agenda\vue\NotificationsPanel$2.class
 com\agenda\vue\WeeklyGridPanel$3.class
 com\agenda\vue\NotificationsPanel$NotificationTableModel.class
@@ -56,5 +51,4 @@ com\agenda\vue\Calender.class
 com\agenda\model\Notification.class
 com\agenda\vue\EventListPanel$1.class
 com\agenda\vue\WeeklyGridPanel.class
-com\agenda\vue\AdminProfileApp.class
 com\agenda\vue\LoginDialog$1.class

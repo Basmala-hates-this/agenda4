@@ -1,5 +1,4 @@
-// Single merged version of AdminProfileApp + AdminProfilePanel
-// Keeps ALL UI, menus, status bar, styles — just one class
+
 
 package com.agenda.vue;
 
@@ -8,6 +7,8 @@ import com.agenda.model.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+
 
 public class AdminProfileApp extends JFrame {
 

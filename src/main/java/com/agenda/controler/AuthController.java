@@ -1,3 +1,9 @@
+///remove this class and dependecies
+///replace it with the agenda controler in the project
+///this is just shit
+///shiiiiiiiiiiiiiiiiiiiiiiit
+
+
 package com.agenda.controler;
 
 import com.agenda.model.User;

@@ -153,8 +153,7 @@ public class JsonUtil {
     public static <T> List<T> fromJsonList(String json, Type type) {
         return gson.fromJson(json, type);
     }
-    
-    // Add these methods to your existing JsonUtil.java class:
+ 
 
 /**
  * Read an object from a JSON file
