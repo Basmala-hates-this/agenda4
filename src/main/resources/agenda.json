@@ -1,0 +1,28 @@
+{
+    "users":[
+     {
+      "id": 1,
+      "firstName": "bro",
+      "lastName": "bruh",
+      "email": "brotha@agenda.com",
+      "password": "1234",
+      "phone": "0000000000",
+      "role": "admin"
+    }
+    ],
+  "events": [
+    {
+      "id": 1,
+      "title": "IHM TD",
+      "date": "2025-12-18",
+      "time": "10:00"
+    },
+    {
+      "id": 2,
+      "title": "something",
+      "date": "2025-12-19",
+      "time": "18:00"
+     
+    }
+  ]
+}

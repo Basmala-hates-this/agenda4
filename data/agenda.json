@@ -1,0 +1,26 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@agenda.com",
+      "password": "admin123",
+      "phone": "0000000000",
+      "role": "admin"
+    }
+  ],
+  "events": [
+    {
+      "eventId": 1,
+      "createurId": 0,
+      "title": "gffsdss",
+      "date": "2025-12-18",
+      "time": "09:12",
+      "description": "",
+      "responsible": "Better",
+      "partageAvec": [],
+      "participants": []
+    }
+  ]
+}

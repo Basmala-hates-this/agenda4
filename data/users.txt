@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "nom": "Admin",
+    "email": "admin@agenda.com",
+    "password": "admin123",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "nom": "Utilisateur",
+    "email": "user@agenda.com",
+    "password": "user123",
+    "role": "user"
+  }
+]
