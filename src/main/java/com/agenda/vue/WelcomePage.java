@@ -70,7 +70,7 @@ public class WelcomePage extends JFrame {
         footerPanel.setBackground(new Color(200, 225, 245));
         footerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
-        JLabel footerLabel = new JLabel("Collaborative Agenda by -for crying out loud & i'm just a victim- 2025");
+        JLabel footerLabel = new JLabel("Collaborative Agenda by ME 2025");
         footerLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
         footerLabel.setForeground(new Color(100, 100, 100));
         footerPanel.add(footerLabel);

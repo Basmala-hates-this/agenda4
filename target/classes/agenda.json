@@ -21,6 +21,17 @@
       "responsible": "Hello",
       "partageAvec": [],
       "participants": []
+    },
+    {
+      "eventId": 2,
+      "createurId": 0,
+      "title": "hello",
+      "date": "2026-09-11",
+      "time": "18:36",
+      "description": "there",
+      "responsible": "Hello",
+      "partageAvec": [],
+      "participants": []
     }
   ]
 }
